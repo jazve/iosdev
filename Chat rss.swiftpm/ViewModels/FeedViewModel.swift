@@ -12,7 +12,7 @@ class FeedViewModel: ObservableObject {
         if feeds.isEmpty {
             let defaultFeeds = [
                 "https://www.ithome.com/rss",
-                // "https://www.zhihu.com/rss",
+                "https://www.zhihu.com/rss",
                 "https://sspai.com/feed",
                 "https://www.vgtime.com/rss.jhtml",
                 "https://www.huxiu.com/rss/0.xml",
@@ -20,8 +20,6 @@ class FeedViewModel: ObservableObject {
                 "https://www.iplaysoft.com/feed",
                 "https://www.appinn.com/feed",
                 "https://www.macdo.cn/feed",
-                
-                
                 
             ]
             defaultFeeds.forEach { url in

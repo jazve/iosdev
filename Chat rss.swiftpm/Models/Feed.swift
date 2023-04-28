@@ -9,7 +9,6 @@ class Feed: Identifiable, ObservableObject, Codable {
     let articles: [Article]
     var unreadItemCount: Int
 
-    
     init(title: String, url: URL, iconURL: URL?, articles: [Article]) {
         self.id = UUID()
         self.title = title
@@ -45,4 +44,3 @@ class Feed: Identifiable, ObservableObject, Codable {
         case id, title, url, iconURL, articles, unreadItemCount
     }
 }
-

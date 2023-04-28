@@ -21,7 +21,7 @@ struct ArticleView: View {
                 Text(viewModel.currentArticle?.title ?? "")
                     // 自定义标题样式
                     .font(.system(size: 24))
-                    .lineSpacing(5)
+                    .lineSpacing(4)
                     .fontWeight(.bold)
                     .foregroundColor(Color(.init(red: 63/255, green: 63/255, blue: 61/255, alpha: 1)))             
                 
@@ -60,8 +60,9 @@ struct ArticleView: View {
         
         // 分割线
         Divider()
-            .padding(.horizontal,20)
+            .padding(.horizontal,22)
             .foregroundColor(Color(.init(red: 63/255, green: 63/255, blue: 61/255, alpha: 0.35)))
+            .opacity(0.5)
         
         HStack {
             Button(action: {
@@ -78,7 +79,7 @@ struct ArticleView: View {
             Button(action: {
                 // Implement favorite action here
             }) {
-                Image(systemName: "bookmark")
+                Image(systemName: "textformat")
             }
             Spacer()
             Button(action: {

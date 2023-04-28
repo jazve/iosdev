@@ -15,7 +15,8 @@ struct HomeView: View {
                 case .feeds:
                     FeedListView()
                 case .latestNews:
-                    LatestNewsView()
+                    Text("home")
+                        .font(.largeTitle)
                 case .discover:
                     Text("发现页面")
                         .font(.largeTitle)
@@ -33,9 +34,9 @@ struct HomeView: View {
         
     private var tabBar: some View {
         TabBar(selectedTab: $selectedTab, tabs: [
-            .init(title: "订阅列表", imageName: "heart", tag: .feeds),
-            .init(title: "最新消息", imageName: "bookmark", tag: .latestNews),
-            .init(title: "发现", imageName: "magnifyingglass", tag: .discover),
+            .init(title: "最新消息", imageName: "menucard", tag: .feeds),
+            .init(title: "订阅列表", imageName: "bubble.middle.bottom", tag: .latestNews),
+            .init(title: "发现", imageName: "globe.americas", tag: .discover),
             .init(title: "设置", imageName: "gear", tag: .settings)
         ])
 

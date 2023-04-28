@@ -1,6 +1,8 @@
 import SwiftUI
 import Kingfisher
 
+
+
 struct BubbleView: View {
     
     let article: Article
@@ -10,7 +12,7 @@ struct BubbleView: View {
     var placeholder: some View {
         RoundedRectangle(cornerRadius: 10)
             .fill(Color(.systemGray6))
-            .opacity(0.7)
+            .opacity(0.9)
             .frame(width: 48 ,height: 48)
     }
     
@@ -19,8 +21,8 @@ struct BubbleView: View {
             
             //             文章图片
             if let imageURL = article.imageURL {
-                
-                KFImage(imageURL)
+//               
+               KFImage(URL(string: imageURL))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 48, height: 48)
@@ -31,25 +33,30 @@ struct BubbleView: View {
             }
             
             // 文章标题
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(article.title)
                         
 //                    .foregroundColor(Color(.init(red: 40/255, green: 40/255, blue: 120/255, alpha: 1)))
                     .foregroundColor(Color(.init(red: 63/255, green: 63/255, blue: 61/255, alpha: 1)))
                     .font(.system(size: 15, weight: .medium))
                     .multilineTextAlignment(.leading)
-                    .lineSpacing(5)
+                    .lineSpacing(4)
                 
             }
             
             .padding(EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20))
 //            .background(Color(.init(red: 238/255, green: 242/255, blue: 255/255, alpha: 1)))
             .background(.white)
+            // 边框
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color(.init(red: 63/255, green: 63/255, blue: 61/255, alpha: 0.05)), lineWidth: 1)
+            )
             .cornerRadius(15)
             .frame(maxWidth: maxWidth*0.85, alignment: .leading)
         
         }
-        .padding(8)
+        .padding(4)
        Spacer()
 //        .colorScheme(.light)
     }
@@ -91,7 +98,7 @@ struct FeedDetailView: View {
     @State private var autoMarkAsRead = false
     
     var filteredArticles: [Article] {
-        feed.articles.sorted(by: { $0.publishDate < $1.publishDate }).filter { article in
+        feed.articles.sorted(by: { $0.publishDate > $1.publishDate }).filter { article in
             switch filter {
             case .all:
                 return true
@@ -111,34 +118,43 @@ struct FeedDetailView: View {
         let currentArticle = filteredArticles[index]
         let previousArticle = filteredArticles[index - 1]
         
-        let currentHourSegment = Calendar.current.component(.hour, from: currentArticle.publishDate) / 3
-        let previousHourSegment = Calendar.current.component(.hour, from: previousArticle.publishDate) / 3
+        let currentHourSegment = Calendar.current.component(.hour, from: currentArticle.publishDate) / 1
+        let previousHourSegment = Calendar.current.component(.hour, from: previousArticle.publishDate) / 1
         
         return currentHourSegment != previousHourSegment
     }
     
     var body: some View {
         
-        VStack{
+        VStack(spacing: 0){
         // 添加切换自动设置已读的按钮
         //    Toggle(isOn: $autoMarkAsRead) {
         //      Text("自动设置已读")
         //    }
             
-            // 底部操作栏
-              Picker(selection: $filter, label: Text("")) {
-                  ForEach(Filter.allCases) { filter in
-                      Text(filter.rawValue).tag(filter)
-                  }
-              }
-              .pickerStyle(SegmentedPickerStyle())
-              .frame(height: 60)
-              .padding(.horizontal, 16)
+            // // 顶部操作栏
+            //   Picker(selection: $filter, label: Text("")) {
+            //       ForEach(Filter.allCases) { filter in
+            //           Text(filter.rawValue).tag(filter)
+            //       }
+            //   }
+            //   .pickerStyle(SegmentedPickerStyle())
+            //   .frame(height: 60)
+            //   .padding(.horizontal, 16)
             
+            // 分割线
+            Divider()
+                .padding(.horizontal, 16)
+                .opacity(0.5)
+
+            // 吸顶显示日期
+            
+
+
             GeometryReader { geometry in
                 ScrollViewReader { scrollViewProxy in
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: 6) {
                             ForEach(filteredArticles.indices, id: \.self) { index in
                                 let article = filteredArticles[index]
                                 VStack(alignment: .leading, spacing: 5) {
@@ -149,7 +165,7 @@ struct FeedDetailView: View {
                                             .font(.footnote)
                                             
                                             .foregroundColor(Color(.init(red: 71/255, green: 71/255, blue: 70/255, alpha: 0.5)))
-                                            .padding(.vertical, 8)
+                                            .padding(.vertical, 6)
                                             .padding(.horizontal, 12)
 //                                            .background(Color(.init(red: 241/255, green: 245/255, blue: 249/255, alpha: 1)))
                                             .background(Color(.init(red: 71/255, green: 71/255, blue: 70/255, alpha: 0.05)))
@@ -175,7 +191,7 @@ struct FeedDetailView: View {
 //                                                    scrollViewProxy.scrollTo(article.id, anchor: .center) // 点击或在详情页出现后立即更新透明度
                                                 }
                                             }
-                                            .opacity(article.isRead ? 0.5 : 1.0) // 已读消息透明度改为50%
+                                            .opacity(article.isRead ? 0.4 : 1.0) // 已读消息透明度改为50%
                                     }
                                 }
                                 .id(article.id)
@@ -205,24 +221,38 @@ struct FeedDetailView: View {
                               }))
                     
                     .navigationBarTitle(feed.title, displayMode: .inline)
+                     // 导航栏返回按钮字体颜色
+                    
                     .sheet(item: $selectedArticleViewModel) { viewModel in
                         ArticleView(viewModel: viewModel)
                             .onDisappear {
                                 selectedArticleViewModel = nil
                             }
                     }
-                   .onAppear {
-                       // 滚动到最后一篇文章
-                       if let lastArticle = filteredArticles.last {
-                           scrollViewProxy.scrollTo(lastArticle.id, anchor: .bottom)
-                       }
-                   }
+                //    .onAppear {
+                //        // 滚动到最后一篇文章
+                //        if let lastArticle = filteredArticles.last {
+                //            scrollViewProxy.scrollTo(lastArticle.id, anchor: .bottom)
+                //        }
+                //    }
                 }
             }
+
+            //底部操作栏
+            // 分割线
+            Divider()
+                .padding(.horizontal, 16)
+                .padding(.bottom, 6)
+                .opacity(0.5)
+
+            ArticleListBottomBar()
+                .padding(.horizontal, 24)
+
             
         }
         .background(Color(.init(red: 246/255, green: 245/255, blue: 244/255, alpha: 1)))
-
+        
+        
     }
     
     // 日期格式化器
@@ -232,6 +262,9 @@ struct FeedDetailView: View {
         formatter.doesRelativeDateFormatting = true
         formatter.dateStyle = .short
         formatter.timeStyle = .short
+
+        // 显示为中文，今天、昨天、前天
+        formatter.locale = Locale(identifier: "zh_CN")
 
         // 显示早上、下午、晚上
         formatter.amSymbol = "上午"
