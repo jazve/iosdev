@@ -127,29 +127,11 @@ struct FeedDetailView: View {
     var body: some View {
         
         VStack(spacing: 0){
-        // 添加切换自动设置已读的按钮
-        //    Toggle(isOn: $autoMarkAsRead) {
-        //      Text("自动设置已读")
-        //    }
-            
-            // // 顶部操作栏
-            //   Picker(selection: $filter, label: Text("")) {
-            //       ForEach(Filter.allCases) { filter in
-            //           Text(filter.rawValue).tag(filter)
-            //       }
-            //   }
-            //   .pickerStyle(SegmentedPickerStyle())
-            //   .frame(height: 60)
-            //   .padding(.horizontal, 16)
             
             // 分割线
             Divider()
                 .padding(.horizontal, 16)
                 .opacity(0.5)
-
-            // 吸顶显示日期
-            
-
 
             GeometryReader { geometry in
                 ScrollViewReader { scrollViewProxy in
@@ -279,6 +261,5 @@ struct FeedDetailView: View {
         let hour = calendar.component(.hour, from: date)
         return hour / 1
     }
-
     
 }
